@@ -1,0 +1,20 @@
+# Entrypoint for *all* tasks to perform in this project
+# See this link for inspiration: https://www.stuartellis.name/articles/rake/
+
+# Source tasks from utils/rake-tasks/
+Rake.add_rakelib 'rake-tasks'
+
+# Load all tasks in our `Apps/**/rake-tasks/*.rake` under app namespaces
+Dir.glob('Apps/*/').each{ |app_folder|
+  app_name = app_folder.split('/')[1]
+  namespace app_name.downcase do
+    Dir.glob("#{app_folder}/rake-tasks/*.rake").each { |task_file|
+      load task_file
+    }
+  end  
+}
+
+# Show tasks as default command
+task :default do
+  system("rake -s -T")
+end

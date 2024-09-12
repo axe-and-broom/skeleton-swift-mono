@@ -1,0 +1,41 @@
+name: Monorepo standard setup
+description: Configures all standard things for the monorepo
+
+runs:
+  using: composite
+  steps:
+    - name: Configure git
+      shell: bash
+      run: |
+        git config --global user.name axe-and-broom-bot
+        git config --global user.email bot@axe-and-broom.com
+
+    - name: Xcode use built-in SCM
+      shell: bash
+      run: |
+        defaults write com.apple.dt.Xcode IDEPackageSupportUseBuiltinSCM YES
+
+    - name: Cache Ruby
+      id: cache-ruby
+      uses: actions/cache@v3
+      with:
+        path: |
+          utils/vendor/ruby
+        key: ruby-${{ hashFiles('Gemfile.lock') }}
+
+    - name: Cache Ruby (Loose, still needs install)
+      if: steps.cache-ruby.outputs.cache-hit != 'true'
+      id: cache-ruby-loose
+      uses: actions/cache/restore@v3
+      with:
+        path: |
+          utils/vendor/ruby
+        key: ruby-${{ hashFiles('Gemfile.lock') }}
+        restore-keys: |
+          ruby-
+
+    - name: Install Ruby Dependencies
+      if: steps.cache-ruby.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        rake setup:bundle

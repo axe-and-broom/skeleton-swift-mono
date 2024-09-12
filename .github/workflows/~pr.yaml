@@ -1,0 +1,45 @@
+name: "-> Trigger - PR"
+
+on:
+  workflow_dispatch:
+  merge_group:
+  pull_request:
+
+concurrency:
+  group: pr-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-avoidance:
+    name: Changed Files (Build Avoidance)
+    timeout-minutes: 10
+    outputs:
+      easypark: ${{ steps.changed-files.outputs.any_changed }}
+    runs-on:
+      - ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Check if App1 code has changed
+        id: app-1-changed
+        uses: tj-actions/changed-files@v42
+        with:
+          files: |
+            Apps/App1/
+          files_ignore: |
+            **/*.md
+            utils/lint-rules/
+
+  app1-test:
+    name: App1-Test
+    uses: ./.github/workflows/app1-test.yaml
+    with:
+      scheme: ${{ inputs.scheme }}
+      test-plan: ${{ inputs.test_plan }}
+      test-plan-configuration: ${{ inputs.test_config }}
+      simulator-appearance: ${{ inputs.appearance }}
+    secrets: inherit

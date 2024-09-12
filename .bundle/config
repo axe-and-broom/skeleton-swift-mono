@@ -1,0 +1,7 @@
+---
+BUNDLE_FORCE_RUBY_PLATFORM: "true"
+BUNDLE_GLOBAL_GEM_CACHE: "false"
+BUNDLE_PATH: "utils/vendor/ruby/bundle"
+BUNDLE_BIN: "utils/vendor/ruby/bundle/bin"
+BUNDLE_RETRY: "5"
+BUNDLE_JOBS: "20"
