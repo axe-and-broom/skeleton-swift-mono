@@ -1,0 +1,11 @@
+---
+# Library manifest
+# This file is used for the generation of the Package.swift file among other things
+# Remember to run 'rake generate' after modifying this file
+name: AppEnvironment
+description: Information about the current app environment
+owner: axe-and-broom
+lifecycle: production
+dependencies:
+  lib:
+  tests:
