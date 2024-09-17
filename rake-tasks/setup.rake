@@ -8,6 +8,7 @@ namespace 'setup' do
   desc "(alias 'rake setup') Runs through all setup steps, run this on a clean checkout"
   task :all do
     sh 'rake setup:bundle'
+    sh 'rake git:hooks:install'
     puts ""
   end
 
