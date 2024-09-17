@@ -1,0 +1,62 @@
+// swift-tools-version: 5.10
+// The swift-tools-version declares the minimum version of Swift required to build this package.
+//
+// ⚠️ GENERATED FILE ⚠️
+//
+// This file was automatically generated and should not be edited.
+// To update this file, run `rake generate` and your changes will be reflected.
+//
+// ⚠️ GENERATED FILE ⚠️
+
+import PackageDescription
+
+let package = Package(
+    name: "{{name}}",
+    {{#has_localization}}
+    defaultLocalization: "en",
+    {{/has_localization}}
+    platforms: [
+        .iOS(.v{{platform_version_ios}}),
+        .watchOS(.v{{platform_version_watchos}})
+    ],
+    products: [
+        .library(
+            name: "{{name}}",
+            targets: ["{{name}}"]
+        ),
+    ],
+    dependencies: [
+        {{#packages}}
+        .package(name: "{{name}}", path: "{{path}}"),
+        {{/packages}}
+        {{#packages_external}}
+        .package(url: "{{url}}", {{#revision}}revision: "{{revision}}"{{/revision}}{{^revision}}exact: "{{version}}"{{/revision}}),
+        {{/packages_external}}
+    ],
+    targets: [
+        .target(
+            name: "{{name}}",
+            dependencies: [
+                {{#deps_lib}}
+                .product(name: "{{name}}", package: "{{package}}"),
+                {{/deps_lib}}
+            ],
+            path: "Sources"{{#resources}},
+            resources: [
+                {{#array}}
+                .{{rule}}("{{path}}"),
+                {{/array}}
+            ]{{/resources}}
+        ){{#has_tests}},
+        .testTarget(
+            name: "{{name}}Tests",
+            dependencies: [
+                "{{name}}",
+                {{#deps_tests}}
+                .product(name: "{{name}}", package: "{{package}}"),
+                {{/deps_tests}}
+            ],
+            path: "Tests"
+        ){{/has_tests}}
+    ]
+)

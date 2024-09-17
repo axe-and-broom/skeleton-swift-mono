@@ -3,7 +3,7 @@ source "https://rubygems.org"
 # Cross repo gems
 
 # gem fastlane
-
+gem 'mustache', '~> 1.1.1'
 
 # App Project Gemfiles
 gem_files = Dir.glob(File.join(File.dirname(__FILE__), 'Apps/*/Gemfile'))

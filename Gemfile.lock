@@ -159,6 +159,7 @@ GEM
     mini_mime (1.1.5)
     multi_json (1.15.0)
     multipart-post (2.4.1)
+    mustache (1.1.1)
     nanaimo (0.3.0)
     naturally (2.2.1)
     nkf (0.2.0)
@@ -214,6 +215,7 @@ PLATFORMS
 
 DEPENDENCIES
   fastlane
+  mustache (~> 1.1.1)
 
 BUNDLED WITH
    2.4.22
