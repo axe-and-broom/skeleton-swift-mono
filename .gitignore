@@ -70,5 +70,11 @@ fastlane/test_output
 utils/vendor/
 
 ## Generated
+Apps/Modules/*.xcodeproj
+Apps/Modules/Modules.xctestplan
+Apps/Modules/modules_generated.yaml
 **/Generated
 Modules/*/*/*/Package.swift
+
+# Modules specific
+Modules/**/Package.resolved
