@@ -20,7 +20,9 @@ namespace 'generate' do
     desc "Generate project files"
     task :project do
         puts "⏳ Generating project files..."
-        # sh 'bundle exec ruby utils/scripts/ruby/generate-project-files.rb'
+        sh 'bundle exec ruby utils/scripts/ruby/generate-modules-project-files.rb'
+        puts "⏳ Generating Apps/Modules/Modules.xcodeproj"
+        sh 'rake tools:xcodegen\["--spec $(pwd)/Apps/Modules/project.yaml"\]'
         puts "✅ Done"
     end
 
