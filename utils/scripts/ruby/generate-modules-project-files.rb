@@ -105,4 +105,39 @@ def generate_dependencies(libraries, features)
   return dependencies
 end
 
+def generate_test_plan
+  puts "⏳ Generating Modules.xctestplan..."
+
+  libraries = $libraries.map { |library|
+    path = Pathname.new(File.expand_path(library.path_lib))
+    .relative_path_from($modules_project_absolute_path)
+    .to_s
+    enabled = File.directory?("#{library.path_lib}/Tests")
+    XCTestPlanTestTarget.new(path, "#{library.name}Tests", enabled)
+  }
+
+  features = $features.map { |feature|
+    path = Pathname.new(File.expand_path(feature.path_impl))
+    .relative_path_from($modules_project_absolute_path)
+    .to_s
+    enabled = File.directory?("#{feature.path_impl}/Tests")
+    XCTestPlanTestTarget.new(path, "#{feature.name_impl}Tests", enabled)
+  }
+
+  test_targets = (libraries + features).sort_by { |target| target.name }
+
+  test_plan = XCTestPlan.new(
+    'Modules',
+    'Modules.xcodeproj',
+    test_targets, 
+    {}
+  )
+
+  File.open($modules_test_plan_path, 'w') { |file|
+    file.write(JSON.pretty_generate(test_plan.to_object))
+  }
+  puts "✅ Done"
+end
+
 generate_modules_xcodegen_project
+generate_test_plan
