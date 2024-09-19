@@ -1,12 +1,12 @@
 require 'mustache'
 require 'yaml'
-require_relative './classes/Library.rb'
+require_relative './modules.rb'
 
 # Mustache Templates
 $spm_lib_template = File.dirname(__FILE__) + '/../../templates/spm-package/spm-lib.mustache'
 
 # Modules
-$libraries = Dir.glob('**/library.yaml').map{ |f| Library.new(f) }.sort_by{ |library| library.name }
+$libraries = libraries()
 
 def generate_packages()
   lib_paths = $libraries.map { |lib| [lib.name, lib.path_lib] }.to_h
