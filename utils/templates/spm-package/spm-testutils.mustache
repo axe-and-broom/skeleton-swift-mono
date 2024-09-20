@@ -1,0 +1,52 @@
+// swift-tools-version: 5.10
+// The swift-tools-version declares the minimum version of Swift required to build this package.
+//
+// ⚠️ GENERATED FILE ⚠️
+//
+// This file was automatically generated and should not be edited.
+// To update this file, run `rake generate` and your changes will be reflected.
+//
+// ⚠️ GENERATED FILE ⚠️
+
+import PackageDescription
+
+let package = Package(
+    name: "{{name}}TestUtils",
+    platforms: [
+        .iOS(.v{{platform_version_ios}}),
+        .watchOS(.v{{platform_version_watchos}})
+    ],
+    products: [
+        .library(
+            name: "{{name}}TestUtils",
+            targets: ["{{name}}TestUtils"]
+        ),
+    ],
+    dependencies: [
+        {{#packages}}
+        .package(name: "{{name}}", path: "{{path}}"),
+        {{/packages}}
+        {{#packages_external}}
+        .package(url: "{{url}}", {{#revision}}revision: "{{revision}}"{{/revision}}{{^revision}}exact: "{{version}}"{{/revision}}),
+        {{/packages_external}}
+    ],
+    targets: [
+        .target(
+            name: "{{name}}TestUtils",
+            dependencies: [
+                {{#testutils_deps}}
+                .product(name: "{{name}}", package: "{{package}}"),
+                {{/testutils_deps}}
+            ],
+            path: "."{{#resources}},
+            resources: [
+                {{#array}}
+                .{{rule}}("{{path}}"),
+                {{/array}}
+            ]{{/resources}},
+            swiftSettings: [
+                .unsafeFlags(["-swift-version", "6"])
+            ]
+        )
+    ]
+)

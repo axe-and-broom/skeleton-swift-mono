@@ -1,0 +1,65 @@
+// swift-tools-version: 5.10
+// The swift-tools-version declares the minimum version of Swift required to build this package.
+//
+// ⚠️ GENERATED FILE ⚠️
+//
+// This file was automatically generated and should not be edited.
+// To update this file, run `rake generate` and your changes will be reflected.
+//
+// ⚠️ GENERATED FILE ⚠️
+
+import PackageDescription
+
+let package = Package(
+    name: "{{name}}Impl",
+    {{#has_localization}}
+    defaultLocalization: "en",
+    {{/has_localization}}
+    platforms: [
+        .iOS(.v{{platform_version_ios}}),
+        .watchOS(.v{{platform_version_watchos}})
+    ],
+    products: [
+        .library(
+            name: "{{name}}Impl",
+            targets: ["{{name}}Impl"]
+        ),
+    ],
+    dependencies: [
+        {{#packages}}
+        .package(name: "{{name}}", path: "{{path}}"),
+        {{/packages}}
+        {{#packages_external}}
+        .package(url: "{{url}}", {{#revision}}revision: "{{revision}}"{{/revision}}{{^revision}}exact: "{{version}}"{{/revision}}),
+        {{/packages_external}}
+    ],
+    targets: [
+        .target(
+            name: "{{name}}Impl",
+            dependencies: [
+                {{#impl_deps}}
+                .product(name: "{{name}}", package: "{{package}}"),
+                {{/impl_deps}}
+            ],
+            path: "Sources"{{#resources}},
+            resources: [
+                {{#array}}
+                .{{rule}}("{{path}}"),
+                {{/array}}
+            ]{{/resources}},
+            swiftSettings: [
+                .unsafeFlags(["-swift-version", "6"])
+            ]
+        ){{#has_tests}},
+        .testTarget(
+            name: "{{name}}ImplTests",
+            dependencies: [
+                "{{name}}Impl",
+                {{#test_deps}}
+                .product(name: "{{name}}", package: "{{package}}"),
+                {{/test_deps}}
+            ],
+            path: "Tests"
+        ){{/has_tests}}
+    ]
+)
