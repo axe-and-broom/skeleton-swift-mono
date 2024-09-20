@@ -1,0 +1,7 @@
+---
+- package: mixpanel-swift
+  products:
+    - Mixpanel
+  owner: 'drivers-platform-ios'
+  url: git@github.com:mixpanel/mixpanel-swift.git
+  version: 4.1.4
