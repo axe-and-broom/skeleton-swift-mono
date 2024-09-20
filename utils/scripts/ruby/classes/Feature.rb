@@ -47,12 +47,12 @@ class Feature
   # Feature specific - Deps
   # ----------------------------
 
-  def api_deps
+  def deps_api
     (@raw["dependencies"]["api"] || [])
     .sort
   end
 
-  def impl_deps
+  def deps_impl
     (
       [self.name] + 
       (@raw["dependencies"]["impl"] || [])
@@ -60,7 +60,7 @@ class Feature
     .sort
   end
   
-  def test_deps
+  def deps_tests
     (
       [self.name, self.name_impl, self.name_testutils] + 
       (@raw["dependencies"]["tests"] || [])
@@ -68,7 +68,7 @@ class Feature
     .sort
   end
   
-  def testutils_deps
+  def deps_testutils
     (
       [self.name] + 
       (@raw["dependencies"]["test-utils"] || [])
