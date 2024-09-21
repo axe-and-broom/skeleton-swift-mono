@@ -1,4 +1,4 @@
-name: "@ Call - EasyPark UITests Workflow"
+name: "@ Call - UITests Workflow"
 
 on:
   workflow_call:
@@ -6,7 +6,7 @@ on:
       runs-on-json:
         description: 'Override "runs-on"'
         required: false
-        default: '["self-hosted","macOS","ARM64","xcode-15"]'
+        default: '["macos-latest"]'
         type: string
 
 jobs:
