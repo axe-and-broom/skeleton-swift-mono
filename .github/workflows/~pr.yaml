@@ -37,6 +37,6 @@ jobs:
   app1-test:
     # Required checks need to run but not necessarily do anything
     needs: build-avoidance
-    name: App1/Unit Tests
+    # name: App1/Unit Tests
     uses: ./.github/workflows/app1-unit-test.yaml
     secrets: inherit
