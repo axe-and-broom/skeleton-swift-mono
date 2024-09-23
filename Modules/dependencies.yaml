@@ -1,0 +1,7 @@
+---
+- package: mixpanel-swift
+  products:
+    - Mixpanel
+  owner: 'axe-and-broom'
+  url: git@github.com:mixpanel/mixpanel-swift.git
+  version: 4.1.4

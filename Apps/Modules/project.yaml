@@ -1,0 +1,38 @@
+name: Modules
+include:
+  - modules_generated.yaml
+options:
+  bundleIdPrefix: com.modules.app
+  createIntermediateGroups: true
+schemes:
+  Modules:
+    build:
+      targets:
+        Modules: all
+    test:
+      testPlans:
+        - path: Modules.xctestplan
+          defaultPlan: true
+      targets:
+        - Modules
+targets:
+  Modules:
+    type: application
+    platform: iOS
+    deploymentTarget: '16.0'
+    templates:
+      - ModulesApp
+    settings:
+      INFOPLIST_FILE: '$(SRCROOT)/iOS/Info.plist'
+    sources:
+      - path: Modules.xctestplan
+      - path: iOS/Sources
+      - path: iOS/Resources
+      - path: iOS/Info.plist
+        buildPhase: none
+      - path: ../../Modules
+        createIntermediateGroups: false
+        name: Modules
+        buildPhase: none
+        excludes:
+          - '*/*/*/'

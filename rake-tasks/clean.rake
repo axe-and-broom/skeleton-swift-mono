@@ -26,6 +26,8 @@ namespace 'clean' do
     puts ""
     sh 'rake clean:ruby'
     puts ""
+    sh 'rake clean:mint'
+    puts ""
     sh 'rake clean:soft'
   end
 
@@ -94,6 +96,14 @@ namespace 'clean' do
   task :ruby do
     puts "⏳ Cleaning local ruby gems..."
     sh "rm -rf utils/vendor/ruby"
+    puts "✅ Done"
+  end
+
+  desc "Clean local mint binaries"
+  task :mint do
+    puts "⏳ Cleaning local mint binaries..."
+    sh "rm -rf utils/vendor/mint"
+    sh "rm -rf utils/spm-bin-tools/mint_/.build"
     puts "✅ Done"
   end
 
