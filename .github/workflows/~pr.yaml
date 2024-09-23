@@ -14,7 +14,7 @@ jobs:
     name: Changed Files (Build Avoidance)
     timeout-minutes: 10
     outputs:
-      changed: ${{ steps.changed-files.outputs.any_changed }}
+      app1: ${{ steps.app-1-changed.outputs.any_changed }}
     runs-on:
       - ubuntu-latest
 
@@ -35,9 +35,7 @@ jobs:
             utils/lint-rules/
 
   app1-test:
-    name: App1-Test
-    uses: ./.github/workflows/app1-test.yaml
-    with:
-      scheme: ${{ inputs.scheme }}
-      test-plan: ${{ inputs.test_plan }}
+    # Required checks need to run but not necessarily do anything
+    name: App1/Unit Tests
+    uses: ./.github/workflows/app1-unit-test.yaml
     secrets: inherit
