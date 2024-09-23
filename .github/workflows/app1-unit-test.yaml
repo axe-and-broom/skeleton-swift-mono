@@ -1,4 +1,4 @@
-name: "@ Call - UITests Workflow"
+name: "App 1 Unit Tests Workflow"
 
 on:
   workflow_call:
