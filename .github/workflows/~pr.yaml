@@ -37,16 +37,10 @@ jobs:
   app1-test:
     # Required checks need to run but not necessarily do anything
     needs: build-avoidance
-    if: needs.build-avoidance.outputs.app1 == 'true'
     name: App1
     uses: ./.github/workflows/app1-unit-test.yaml
     secrets: inherit
-
-  app1-test-skip:
-    needs: build-avoidance
-    if: needs.build-avoidance.outputs.app1 == 'false'
-    name: App1
-    runs-on: ubuntu-latest
-    steps:
-      - name: Skip
-        run: echo "Skipping App1 tests"
+    with:
+      runs-on-json: ${{ needs.build-avoidance.outputs.app1 == true && '["macos-latest"]' || '["ubuntu-latest"]' }}
+      files-changed: ${{ needs.build-avoidance.outputs.app1 }}
+    

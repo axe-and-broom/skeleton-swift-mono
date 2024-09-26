@@ -5,9 +5,14 @@ on:
     inputs:
       runs-on-json:
         description: 'Override "runs-on"'
+        type: string
         required: false
         default: '["macos-latest"]'
-        type: string
+      files-changed:
+        description: 'Files changed'
+        type: boolean
+        required: false
+        default: true
 
 jobs:
   tests:
@@ -18,11 +23,13 @@ jobs:
 
     steps:
       - name: Checkout
+        if: ${{ inputs.files-changed == true }}
         uses: actions/checkout@v3
         with:
           fetch-depth: 1
 
       - name: Run Tests
+        if: ${{ inputs.files-changed == true }}
         run: |
           echo "⏳ Running tests"
           echo "Runs on: ${{ toJson(fromJson(inputs.runs-on-json)) }}"
