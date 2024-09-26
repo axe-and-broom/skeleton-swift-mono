@@ -10,9 +10,9 @@ on:
         default: '["macos-latest"]'
       files-changed:
         description: 'Files changed'
-        type: boolean
+        type: string
         required: false
-        default: true
+        default: 'true'
 
 jobs:
   tests:
@@ -23,13 +23,13 @@ jobs:
 
     steps:
       - name: Checkout
-        if: ${{ inputs.files-changed == true }}
+        if: ${{ inputs.files-changed == 'true' }}
         uses: actions/checkout@v3
         with:
           fetch-depth: 1
 
       - name: Run Tests
-        if: ${{ inputs.files-changed == true }}
+        if: ${{ inputs.files-changed == 'true' }}
         run: |
           echo "⏳ Running tests"
           echo "Runs on: ${{ toJson(fromJson(inputs.runs-on-json)) }}"
