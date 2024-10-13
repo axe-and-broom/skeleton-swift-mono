@@ -9,6 +9,7 @@ namespace 'setup' do
   task :all do
     sh 'rake setup:bundle'
     sh 'rake git:hooks:install'
+    sh 'rake generate'
     puts ""
   end
 
