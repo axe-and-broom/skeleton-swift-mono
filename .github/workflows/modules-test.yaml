@@ -28,8 +28,8 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Run Tests
-        run: |
-          echo "⏳ Running tests"
-          echo "Runs on: ${{ toJson(fromJson(inputs.runs-on-json)) }}"
-          echo "✅ Done"
+      - name: Mono setup
+        uses: ./.github/actions/mono-setup
+
+      - name: Run tests
+        run: rake modules:ci:test
