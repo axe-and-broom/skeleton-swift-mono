@@ -39,3 +39,8 @@ runs:
       shell: bash
       run: |
         rake setup:bundle
+
+    - name: Generate Files
+      shell: bash
+      run: |
+        rake generate
