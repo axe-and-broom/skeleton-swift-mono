@@ -1,0 +1,108 @@
+name: 'Build Avoidance'
+
+on:
+  workflow_call:
+    inputs:
+      fetch-depth-fallback:
+        description: 'Fallback fetch depth if not in a PR'
+        type: number
+        required: false
+        default: 0
+    outputs:
+      pr-commits:
+        description: 'The number of commits in the PR'
+        value: ${{ jobs.changed-files.outputs.commits }}
+      fetch-depth:
+        description: 'The suggested fetch depth'
+        value: ${{ jobs.changed-files.outputs.depth }}
+      changed-modules:
+        description: 'Modules code has changed'
+        value: ${{ jobs.changed-files.outputs.modules }}
+      changed-app1:
+        description: 'App1 code has changed'
+        value: ${{ jobs.changed-files.outputs.app1 }}
+
+jobs:
+  changed-files:
+    name: Changed Files
+    timeout-minutes: 5
+    outputs:
+      commits: ${{ steps.depth.outputs.commits }}
+      depth: ${{ steps.depth.outputs.depth }}
+      modules: ${{ steps.modules.outputs.any_changed == 'true' }}
+      app1: ${{ steps.app1.outputs.any_changed == 'true' }}
+    runs-on:
+      - ubuntu-latest
+
+    steps:
+      - name: Suggested git fetch-depth
+        id: depth
+        run: |
+          # Check if we are in a PR
+          if [ "${{ github.event_name }}" != "pull_request" ]; then
+            echo "Not a PR, suggested/fallback fetch-depth ${{ inputs.fetch-depth-fallback }}"
+            echo "commits=${{ inputs.fetch-depth-fallback }}" >> $GITHUB_OUTPUT
+            echo "depth=${{ inputs.fetch-depth-fallback }}" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # Get the number of commits in the PR from the GitHub API
+          PR_INFO=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.number }} )
+
+          PR_COMMITS=$(echo $PR_INFO | jq '.commits')
+          DEPTH=$((PR_COMMITS + 1))
+
+          # Print info
+          echo "Number of commits in PR: $PR_COMMITS"
+          echo "Suggested fetch depth: $DEPTH"
+
+          # Set the outputs
+          echo "commits=$PR_COMMITS" >> $GITHUB_OUTPUT
+          echo "depth=$DEPTH" >> $GITHUB_OUTPUT
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: ${{ steps.depth.outputs.depth }}
+
+      - name: Check if Modules code has changed
+        id: modules
+        uses: tj-actions/changed-files@v42
+        with:
+          files: |
+            Apps/Modules/
+            Modules/
+            utils/
+            .github/actions/mono-setup/
+            .github/workflows/mono-test.yaml
+          files_ignore: |
+            **/*.md
+            utils/lint-rules/
+
+      - name: Check if App1 code has changed
+        id: app1
+        uses: tj-actions/changed-files@v42
+        with:
+          files: |
+            Apps/App1/
+            Modules/
+            .github/workflows/app1-test.yaml
+          files_ignore: |
+            **/*.md
+            utils/lint-rules/
+
+      - name: List all changed files
+        env:
+          MODULES_CHANGED_FILES: ${{ steps.modules-changed.outputs.all_changed_files }}
+          APP1_CHANGED_FILES: ${{ steps.app1-changed.outputs.all_changed_files }}
+        run: |
+          echo "Modules changed files:"
+          for file in ${MODULES_CHANGED_FILES}; do
+            echo "$file was changed"
+          done
+
+          echo "App1 changed files:"
+          for file in ${APP1_CHANGED_FILES}; do
+            echo "$file was changed"
+          done
