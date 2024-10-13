@@ -22,7 +22,7 @@ jobs:
     uses: ./.github/workflows/modules-test.yaml
     secrets: inherit
     with:
-      files-changed: ${{ needs.build-avoidance.outputs.changed-modules }}
+      files-changed: ${{ needs.build-avoidance.outputs.changed-modules == 'true' }}
   
   app1:
     # Required checks need to run but not necessarily do anything, can skip on job level
@@ -31,5 +31,5 @@ jobs:
     uses: ./.github/workflows/app1-test.yaml
     secrets: inherit
     with:
-      files-changed: ${{ needs.build-avoidance.outputs.changed-app1 }}
+      files-changed: ${{ needs.build-avoidance.outputs.changed-app1 == 'true' }}
     
