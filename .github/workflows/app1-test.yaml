@@ -1,4 +1,4 @@
-name: "App 1 Unit Tests Workflow"
+name: "App 1 Test"
 
 on:
   workflow_call:
@@ -10,46 +10,44 @@ on:
         default: '["macos-latest"]'
       files-changed:
         description: 'Files changed'
-        type: string
+        type: boolean
         required: false
-        default: 'true'
+        default: true
 
 jobs:
   unit-tests:
-    name: "Unit Tests"
+    if: ${{ inputs.files-changed }}
+    name: "UnitTests"
     environment: app1/prod
     timeout-minutes: 20
     runs-on: ${{ fromJson(inputs.runs-on-json) }}
 
     steps:
       - name: Checkout
-        if: ${{ inputs.files-changed == 'true' }}
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
       - name: Run Tests
-        if: ${{ inputs.files-changed == 'true' }}
         run: |
           echo "⏳ Running tests"
           echo "Runs on: ${{ toJson(fromJson(inputs.runs-on-json)) }}"
           echo "✅ Done"
 
   ui-tests:
-    name: "UI Tests"
+    if: ${{ inputs.files-changed }}
+    name: "UITests"
     environment: app1/prod
     timeout-minutes: 20
     runs-on: ${{ fromJson(inputs.runs-on-json) }}
 
     steps:
       - name: Checkout
-        if: ${{ inputs.files-changed == 'true' }}
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
       - name: Run Tests
-        if: ${{ inputs.files-changed == 'true' }}
         run: |
           echo "⏳ Running tests"
           echo "Runs on: ${{ toJson(fromJson(inputs.runs-on-json)) }}"
