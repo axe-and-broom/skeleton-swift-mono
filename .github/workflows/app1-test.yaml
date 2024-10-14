@@ -1,24 +1,49 @@
-name: "@ Call - UITests Workflow"
+name: "App 1 Test"
 
 on:
   workflow_call:
     inputs:
       runs-on-json:
         description: 'Override "runs-on"'
+        type: string
         required: false
         default: '["macos-latest"]'
-        type: string
+      files-changed:
+        description: 'Files changed'
+        type: boolean
+        required: false
+        default: true
 
 jobs:
-  tests:
-    name: "Tests"
+  unit-tests:
+    if: ${{ inputs.files-changed }}
+    name: "UnitTests"
     environment: app1/prod
     timeout-minutes: 20
     runs-on: ${{ fromJson(inputs.runs-on-json) }}
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Run Tests
+        run: |
+          echo "⏳ Running tests"
+          echo "Runs on: ${{ toJson(fromJson(inputs.runs-on-json)) }}"
+          echo "✅ Done"
+
+  ui-tests:
+    if: ${{ inputs.files-changed }}
+    name: "UITests"
+    environment: app1/prod
+    timeout-minutes: 20
+    runs-on: ${{ fromJson(inputs.runs-on-json) }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           fetch-depth: 1
 

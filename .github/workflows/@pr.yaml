@@ -1,0 +1,35 @@
+name: "@PR"
+
+on:
+  workflow_dispatch:
+  merge_group:
+  pull_request:
+
+concurrency:
+  group: pr-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-avoidance:
+    name: Build Avoidance
+    uses: ./.github/workflows/build-avoidance.yaml
+    secrets: inherit
+
+  modules:
+    # Required checks need to run but not necessarily do anything, can skip on job level
+    needs: build-avoidance
+    name: Modules
+    uses: ./.github/workflows/modules-test.yaml
+    secrets: inherit
+    with:
+      files-changed: ${{ needs.build-avoidance.outputs.changed-modules == 'true' }}
+  
+  app1:
+    # Required checks need to run but not necessarily do anything, can skip on job level
+    needs: build-avoidance
+    name: App1
+    uses: ./.github/workflows/app1-test.yaml
+    secrets: inherit
+    with:
+      files-changed: ${{ needs.build-avoidance.outputs.changed-app1 == 'true' }}
+    

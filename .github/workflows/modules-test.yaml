@@ -1,0 +1,35 @@
+name: "Modules Test"
+
+on:
+  workflow_call:
+    inputs:
+      runs-on-json:
+        description: 'Override "runs-on"'
+        type: string
+        required: false
+        default: '["macos-latest"]'
+      files-changed:
+        description: 'Files changed'
+        type: boolean
+        required: false
+        default: true
+
+jobs:
+  unit-tests:
+    if: ${{ inputs.files-changed }}
+    name: "Unit Tests"
+    environment: app1/prod
+    timeout-minutes: 20
+    runs-on: ${{ fromJson(inputs.runs-on-json) }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Mono setup
+        uses: ./.github/actions/mono-setup
+
+      - name: Run tests
+        run: rake modules:ci:test

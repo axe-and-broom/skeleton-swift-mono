@@ -39,3 +39,22 @@ runs:
       shell: bash
       run: |
         rake setup:bundle
+
+    - name: Cache Mint
+      id: cache-mint
+      uses: actions/cache@v3
+      with:
+        path: |
+          utils/vendor/mint
+        key: mint-${{ hashFiles('utils/spm-bin-tools/mint_/Mintfile') }}
+
+    - name: Install Mint Dependencies
+      if: steps.cache-mint.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        rake tools:mint\[bootstrap\]
+
+    - name: Generate Files
+      shell: bash
+      run: |
+        rake generate
